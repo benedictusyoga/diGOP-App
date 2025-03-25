@@ -15,29 +15,44 @@ struct JourneyDetailSheets: View {
     @State private var isCheckpointsExpanded: Bool = false
     
     var body: some View {
-        VStack {
+        VStack (alignment: .leading){
             Text(journey.title)
                 .font(.title)
                 .fontWeight(.bold)
             
             // Map with route
-            Map(coordinateRegion: $region, annotationItems: journey.checkpoints) { checkpoint in
-                MapAnnotation(coordinate: checkpoint.coordinate) {
-                    VStack {
-                        Image(systemName: "mappin.circle.fill")
-                            .foregroundColor(.red)
-                            .font(.title)
-                        Text(checkpoint.title)
-                            .font(.caption)
-                            .foregroundColor(.black)
+            HStack(alignment: .center){
+                Spacer()
+                
+                Image(systemName: "photo.artframe")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 150, height: 150)
+                
+                Spacer()
+                
+                Map(coordinateRegion: $region, annotationItems: journey.checkpoints) { checkpoint in
+                    MapAnnotation(coordinate: checkpoint.coordinate) {
+                        VStack {
+                            Image(systemName: "mappin.circle.fill")
+                                .foregroundColor(.red)
+                                .font(.title)
+                            Text(checkpoint.title)
+                                .font(.caption)
+                                .foregroundColor(.black)
+                        }
                     }
                 }
+                .overlay(RouteOverlay(route: route), alignment: .center)
+                .onAppear {
+                    setupMap()
+                }
+                .aspectRatio(contentMode: .fit)
+                .frame(width: 150, height: 150)
+                .cornerRadius(12)
+                
+                Spacer()
             }
-            .overlay(RouteOverlay(route: route), alignment: .center)
-            .onAppear {
-                setupMap()
-            }
-            .frame(height: 300)
             
             DisclosureGroup("View Checkpoints", isExpanded: $isCheckpointsExpanded) {
                             VStack(alignment: .leading) {
@@ -48,13 +63,10 @@ struct JourneyDetailSheets: View {
                                         VStack(alignment: .leading) {
                                             Text(checkpoint.title)
                                                 .font(.headline)
-                                            Text(checkpoint.desc)
-                                                .font(.subheadline)
-                                                .foregroundColor(.gray)
                                         }
                                         Spacer()
                                     }
-                                    .padding(.vertical, 5)
+                                    .padding(.vertical, 1)
                                 }
                             }
                             .padding()

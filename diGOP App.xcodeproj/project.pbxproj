@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		DE702DD12D91907200034219 /* SwiftData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE702DD02D91907200034219 /* SwiftData.framework */; };
+		DE702DD32D91907900034219 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE702DD22D91907900034219 /* MapKit.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		DE702DBC2D91903F00034219 /* diGOP App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "diGOP App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE702DD02D91907200034219 /* SwiftData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftData.framework; path = System/Library/Frameworks/SwiftData.framework; sourceTree = SDKROOT; };
+		DE702DD22D91907900034219 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +30,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DE702DD32D91907900034219 /* MapKit.framework in Frameworks */,
+				DE702DD12D91907200034219 /* SwiftData.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -33,6 +42,7 @@
 			isa = PBXGroup;
 			children = (
 				DE702DBE2D91903F00034219 /* diGOP App */,
+				DE702DCF2D91907200034219 /* Frameworks */,
 				DE702DBD2D91903F00034219 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -43,6 +53,15 @@
 				DE702DBC2D91903F00034219 /* diGOP App.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		DE702DCF2D91907200034219 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DE702DD22D91907900034219 /* MapKit.framework */,
+				DE702DD02D91907200034219 /* SwiftData.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,6 +196,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = Yes;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = Yes;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
@@ -234,6 +255,8 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = Yes;
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = Yes;
 				IPHONEOS_DEPLOYMENT_TARGET = 18.2;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
