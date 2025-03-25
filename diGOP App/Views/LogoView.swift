@@ -8,8 +8,13 @@
 import SwiftUI
 
 struct LogoView: View {
+    var offset: CGFloat = 0
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Image("diGOP Logo")
+            .resizable()
+            .scaledToFit()
+            .frame(width: 150, height: 150)
+            .offset(y:offset)
     }
 }
 

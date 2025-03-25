@@ -13,6 +13,9 @@ struct diGOP_AppApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
             Item.self,
+            UserProfile.self,
+            Journey.self,
+            Checkpoint.self,
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
