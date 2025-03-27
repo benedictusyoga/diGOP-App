@@ -49,7 +49,7 @@ struct NameInputView: View {
             }
         }
         .fullScreenCover(isPresented: $isNameSaved) {
-            JourneyListView()
+            MainTabView()
         }
     }
     

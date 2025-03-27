@@ -15,7 +15,7 @@ struct ContentView: View {
     var body: some View {
         Group{
             if isNameSet{
-                JourneyListView()
+                MainTabView()
             }else{
                 SplashScreenView()
             }

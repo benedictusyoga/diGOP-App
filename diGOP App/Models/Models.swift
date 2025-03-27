@@ -13,14 +13,16 @@ import MapKit
 @Model
 class UserProfile{
     var name: String
+    var experiencePoints: Int
     
-    init(name: String) {
+    init(name: String, experiencePoints: Int = 0) {
         self.name = name
+        self.experiencePoints = experiencePoints
     }
 }
 
 @Model
-class Journey{
+class Journey: Identifiable{
     @Attribute(.unique) var id: UUID
     var title: String
     var desc: String
