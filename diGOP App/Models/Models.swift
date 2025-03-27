@@ -9,13 +9,17 @@ import Foundation
 import SwiftUI
 import SwiftData
 import MapKit
-
+//
 @Model
 class UserProfile{
     var name: String
+    var xp: Int
+    var avatar: String
     
-    init(name: String) {
+    init(name: String, xp: Int = 0, avatar: String = "avatar") {
         self.name = name
+        self.xp = 0
+        self.avatar = avatar
     }
 }
 
@@ -24,13 +28,15 @@ class Journey{
     @Attribute(.unique) var id: UUID
     var title: String
     var desc: String
+    var image: String
     var completedCheckpoints: Int
     @Relationship var checkpoints: [Checkpoint] = []
     
-    init(title: String, desc: String, completedCheckpoints: Int = 0, checkpoints: [Checkpoint] = []) {
+    init(title: String, desc: String, image: String, completedCheckpoints: Int = 0, checkpoints: [Checkpoint] = []) {
         self.id = UUID()
         self.title = title
         self.desc = desc
+        self.image = image
         self.completedCheckpoints = completedCheckpoints
         self.checkpoints = checkpoints
     }
