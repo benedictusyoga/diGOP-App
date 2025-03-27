@@ -29,6 +29,7 @@ struct diGOP_AppApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .modelContainer(for: UserProfile.self)
         }
         .modelContainer(sharedModelContainer)
     }
