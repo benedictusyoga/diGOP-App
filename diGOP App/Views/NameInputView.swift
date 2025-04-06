@@ -14,44 +14,50 @@ struct NameInputView: View {
     @Environment(\.modelContext) private var modelContext
     
     var body: some View {
-        VStack(spacing: 20){
-            LogoView(offset: -20)
-            VStack{
-                Text("We'd love to address you properly")
-                    .font(.subheadline)
-                Text("What's your preferred name?")
-                    .font(.title3)
-            }
-            
-            TextField("Nickname", text: $name)
-                .padding()
-                .background(Color(.systemGray6))
-                .cornerRadius(8)
-                .padding(.horizontal, 20)
-                .autocorrectionDisabled(true)
-            
-            Button(action: saveName) {
-                HStack{
-                    Image(systemName: "figure.run")
-                    Text("Start Your Journey")
+        ZStack {
+            Color(.secondarySystemBackground)
+                .ignoresSafeArea()
+            VStack(spacing: 20){
+                LogoView(offset: -20)
+                VStack{
+                    Text("We'd love to address you properly")
+                        .font(.subheadline)
+                    Text("What's your preferred name?")
                         .font(.title3)
-                        .cornerRadius(10)
+                }
+                
+                TextField("Nickname", text: $name)
+                    .padding()
+                    .background(Color(.tertiarySystemBackground))
+                    .cornerRadius(8)
+                    .padding(.horizontal, 20)
+                    .autocorrectionDisabled(true)
+                
+                Button(action: saveName) {
+                    HStack{
+                        Image(systemName: "figure.run")
+                        Text("Start Your Journey")
+                            .font(.title3)
+                            .cornerRadius(10)
+                    }
+                }
+                .buttonStyle(.borderless)
+                .disabled(name.isEmpty)
+            }
+            .padding()
+            .onAppear{
+                if let user = try? modelContext.fetch(FetchDescriptor<UserProfile>()).first{
+                    name = user.name
+                    isNameSaved = true
                 }
             }
-            .buttonStyle(.borderless)
-            .disabled(name.isEmpty)
-        }
-        .padding()
-        .onAppear{
-            if let user = try? modelContext.fetch(FetchDescriptor<UserProfile>()).first{
-                name = user.name
-                isNameSaved = true
+            .fullScreenCover(isPresented: $isNameSaved) {
+                MainTabView()
             }
         }
-        .fullScreenCover(isPresented: $isNameSaved) {
-            MainTabView()
-        }
+        
     }
+    
     
     private func saveName(){
         let user = UserProfile(name: name)
