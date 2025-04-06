@@ -82,8 +82,6 @@ struct JourneyListView: View {
                                                 expandedJourney = nil
                                             } else {
                                                 expandedJourney = journey
-                                                
-                                                // Scroll into view
                                                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
                                                     withAnimation {
                                                         proxy.scrollTo(journey.id, anchor: .top)
@@ -91,8 +89,10 @@ struct JourneyListView: View {
                                                 }
                                             }
                                         }
-                                    }
+                                    },
+                                    user: userProfiles.first // 👈 Pass current user
                                 )
+
                             }
                         }
                         .padding(.top, 16)
@@ -139,23 +139,25 @@ struct JourneyCardView: View {
     var journey: Journey
     var isExpanded: Bool
     var onToggleExpand: () -> Void
+    var user: UserProfile?  // Still optional
+
     @State private var showExpandedContent: Bool = false
-    
+
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .topLeading) {
                 VStack(spacing: 0) {
                     HStack(alignment: .top, spacing: 24) {
-                        Spacer().frame(width: 70) // reserved image space
+                        Spacer().frame(width: 70)
                         VStack(alignment: .leading, spacing: 6) {
                             Text(journey.title)
                                 .font(.headline)
                                 .fontWeight(.semibold)
-                            
+
                             Text(journey.desc)
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
-                            
+
                             HStack(spacing: 4) {
                                 Label("\(journey.checkpoints.count) Checkpoints", systemImage: "flag.fill")
                                     .foregroundColor(.blue)
@@ -164,14 +166,14 @@ struct JourneyCardView: View {
                         }
                         Spacer()
                     }
-                    .padding(16) // Equal padding on all sides of the header
-                    
+                    .padding(16)
+
                     if isExpanded && showExpandedContent {
                         VStack(alignment: .leading, spacing: 12) {
                             MapViewPreview(journey: journey)
                                 .frame(height: 120)
                                 .cornerRadius(10)
-                            
+
                             VStack(spacing: 8) {
                                 ForEach(journey.checkpoints) { checkpoint in
                                     HStack {
@@ -187,8 +189,27 @@ struct JourneyCardView: View {
                                     .cornerRadius(10)
                                 }
                             }
-                            .padding()
+                            .padding(.horizontal)
 
+                            // ✅ Conditionally show the button only if `user` is not nil
+                            if let user = user {
+                                NavigationLink(destination: JourneyProgressView(journey: journey, user: user)) {
+                                    HStack {
+                                        Image(systemName: "play.fill")
+                                        Text("Start Journey")
+                                            .fontWeight(.semibold)
+                                    }
+                                    .frame(maxWidth: .infinity)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .foregroundColor(.white)
+                                    .cornerRadius(12)
+                                }
+                            } else {
+                                Text("Unable to start: user not found")
+                                    .font(.footnote)
+                                    .foregroundColor(.red)
+                            }
                         }
                         .transition(.opacity.combined(with: .scale(0.95, anchor: .top)))
                         .animation(.easeOut(duration: 0.2), value: showExpandedContent)
@@ -214,8 +235,7 @@ struct JourneyCardView: View {
                 }
                 .sensoryFeedback(.selection, trigger: isExpanded)
                 .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 4)
-                
-                // MARK: - Floating Image (Preserved Layout)
+
                 JourneyImageLoader(imageName: journey.title, isExpanded: isExpanded)
                     .offset(x: -8, y: -24)
                     .zIndex(1)
@@ -225,6 +245,8 @@ struct JourneyCardView: View {
         .padding(.top, 8)
     }
 }
+
+
 
 
 

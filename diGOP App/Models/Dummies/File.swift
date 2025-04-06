@@ -4,31 +4,26 @@ extension Journey {
             Journey(
                 title: "GOP 9",
                 desc: "Office Space",
-                completedCheckpoints: 2,
                 checkpoints: Checkpoint.gopCheckpoints
             ),
             Journey(
                 title: "The Breeze",
                 desc: "Shopping Center",
-                completedCheckpoints: 3,
                 checkpoints: Checkpoint.breezeCheckpoints
             ),
             Journey(
                 title: "BSD Plaza",
                 desc: "Community Hub",
-                completedCheckpoints: 1,
                 checkpoints: Checkpoint.bsdPlazaCheckpoints
             ),
             Journey(
                 title: "AEON Mall",
                 desc: "Retail & Dining",
-                completedCheckpoints: 4,
                 checkpoints: Checkpoint.aeonMallCheckpoints
             ),
             Journey(
                 title: "Green Office Park",
                 desc: "Eco-friendly Business Hub",
-                completedCheckpoints: 2,
                 checkpoints: Checkpoint.greenOfficeCheckpoints
             )
         ]
