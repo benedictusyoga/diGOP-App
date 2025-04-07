@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "829F1BED-DD4C-428C-B31E-250A8C03CB38_1_105_c.jpeg",
+      "filename" : "avatar_explorer.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "829F1BED-DD4C-428C-B31E-250A8C03CB38_1_105_c 1.jpeg",
+      "filename" : "avatar_explorer 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "829F1BED-DD4C-428C-B31E-250A8C03CB38_1_105_c 2.jpeg",
+      "filename" : "avatar_explorer 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

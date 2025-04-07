@@ -16,6 +16,36 @@ enum JourneySortOption: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+struct EditNameView: View {
+    @Bindable var user: UserProfile
+    @Environment(\.dismiss) var dismiss
+    
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    TextField("Your name", text: $user.name)
+                        .autocapitalization(.words)
+                }
+            }
+            .navigationTitle("Edit Name")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Save") {
+                        dismiss()
+                    }
+                }
+            }
+        }
+    }
+}
+
 struct JourneyListView: View {
     @State private var selectedSortOption: JourneySortOption = .alphabetical
     @State private var searchText: String = ""
@@ -24,6 +54,9 @@ struct JourneyListView: View {
     @Query private var userProfiles: [UserProfile]
     @AppStorage("hasSeenWelcome") private var hasSeenWelcome: Bool = false
     @State private var showWelcomeAlert: Bool = false
+    @State private var isEditingName: Bool = false
+    
+    
     
     var filteredJourneys: [Journey] {
         var result = journeys
@@ -47,28 +80,41 @@ struct JourneyListView: View {
         NavigationStack {
             ScrollViewReader { proxy in
                 ScrollView {
-                    HStack(alignment: .center) {
+                    if let user = userProfiles.first {
+                        ProfileCardView(user: user, isEditingName: $isEditingName)
+                            .sheet(isPresented: $isEditingName) {
+                                EditNameView(user: user)
+                                    .presentationDetents([.medium])
+                                    .presentationDragIndicator(.visible)
+                            }
+                            .padding(.top, 12)
+                    }
+                    
+                    HStack {
                         Image("diGOP Logo")
                             .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .frame(width: 40, height: 40)
-                        
-                        VStack(alignment: .leading) {
-                            Text("Hi, \(userProfiles.first?.name ?? "NAMEERR")")
-                                .font(.headline)
-                            Text("Choose your first Journey!")
-                                .font(.caption)
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 48)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Journeys")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                                .foregroundColor(.primary)
+                            
+                            Text("Choose a journey to start!")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
                         }
                         
-                        Spacer()
                     }
-                    .padding() // Ensures padding inside HStack
-                    .background(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .fill(Color(.tertiarySystemBackground))
-                    )
                     .padding(.horizontal, 24)
-                    .padding(.vertical, 24)
+                    .padding(.top, 32)
+                    .padding(.bottom, 8)
+                    
+                    Divider()
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 12)
                     
                     VStack(alignment: .leading, spacing: 8) {
                         VStack(spacing: 12) {
@@ -92,7 +138,7 @@ struct JourneyListView: View {
                                     },
                                     user: userProfiles.first // 👈 Pass current user
                                 )
-
+                                
                             }
                         }
                         .padding(.top, 16)
@@ -101,7 +147,7 @@ struct JourneyListView: View {
                     .padding(.horizontal, 24) // This ensures the content has horizontal padding
                 }
                 .searchable(text: $searchText, prompt: "Search for Journeys")
-                .navigationTitle("Choose Journey")
+                .navigationTitle("diGOP")
                 .toolbar {
                     ToolbarItem(placement: .navigationBarTrailing) {
                         Menu {
@@ -140,9 +186,9 @@ struct JourneyCardView: View {
     var isExpanded: Bool
     var onToggleExpand: () -> Void
     var user: UserProfile?  // Still optional
-
+    
     @State private var showExpandedContent: Bool = false
-
+    
     var body: some View {
         VStack(spacing: 0) {
             ZStack(alignment: .topLeading) {
@@ -153,11 +199,11 @@ struct JourneyCardView: View {
                             Text(journey.title)
                                 .font(.headline)
                                 .fontWeight(.semibold)
-
+                            
                             Text(journey.desc)
                                 .font(.footnote)
                                 .foregroundColor(.secondary)
-
+                            
                             HStack(spacing: 4) {
                                 Label("\(journey.checkpoints.count) Checkpoints", systemImage: "flag.fill")
                                     .foregroundColor(.blue)
@@ -167,13 +213,13 @@ struct JourneyCardView: View {
                         Spacer()
                     }
                     .padding(16)
-
+                    
                     if isExpanded && showExpandedContent {
                         VStack(alignment: .leading, spacing: 12) {
                             MapViewPreview(journey: journey)
                                 .frame(height: 120)
                                 .cornerRadius(10)
-
+                            
                             VStack(spacing: 8) {
                                 ForEach(journey.checkpoints) { checkpoint in
                                     HStack {
@@ -190,7 +236,7 @@ struct JourneyCardView: View {
                                 }
                             }
                             .padding(.horizontal)
-
+                            
                             // ✅ Conditionally show the button only if `user` is not nil
                             if let user = user {
                                 NavigationLink(destination: JourneyProgressView(journey: journey, user: user)) {
@@ -235,12 +281,12 @@ struct JourneyCardView: View {
                 }
                 .sensoryFeedback(.selection, trigger: isExpanded)
                 .shadow(color: .black.opacity(0.05), radius: 6, x: 0, y: 4)
-
+                
                 JourneyImageLoader(imageName: journey.title, isExpanded: isExpanded)
                     .offset(x: -8, y: -24)
                     .zIndex(1)
             }
-            .padding(.bottom, isExpanded ? 12 : 4)
+            .padding(.bottom, isExpanded ? 16 : 4)
         }
         .padding(.top, 8)
     }
