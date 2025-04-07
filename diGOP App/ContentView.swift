@@ -10,24 +10,24 @@ import SwiftData
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var items: [Item]
+    @State private var isNameSet: Bool = false
 
     var body: some View {
-        SplashScreenView()
-    }
-
-    private func addItem() {
-        withAnimation {
-            let newItem = Item(timestamp: Date())
-            modelContext.insert(newItem)
+        Group{
+            if isNameSet{
+                MainTabView()
+            }else{
+                SplashScreenView()
+            }
+        }
+        .onAppear(){
+            checkUserProfile()
         }
     }
-
-    private func deleteItems(offsets: IndexSet) {
-        withAnimation {
-            for index in offsets {
-                modelContext.delete(items[index])
-            }
+    
+    private func checkUserProfile(){
+        if let user = try? modelContext.fetch(FetchDescriptor<UserProfile>()).first{
+            isNameSet = !user.name.isEmpty
         }
     }
 }
