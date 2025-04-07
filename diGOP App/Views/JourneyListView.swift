@@ -186,6 +186,7 @@ struct JourneyCardView: View {
     var isExpanded: Bool
     var onToggleExpand: () -> Void
     var user: UserProfile?  // Still optional
+    @State private var showCheckpoints = false
     
     @State private var showExpandedContent: Bool = false
     
@@ -220,22 +221,83 @@ struct JourneyCardView: View {
                                 .frame(height: 120)
                                 .cornerRadius(10)
                             
-                            VStack(spacing: 8) {
-                                ForEach(journey.checkpoints) { checkpoint in
-                                    HStack {
-                                        Image(systemName: checkpoint.isCompleted ? "checkmark.circle.fill" : "circle")
-                                            .foregroundColor(checkpoint.isCompleted ? .green : .gray)
-                                        Text(checkpoint.title)
-                                            .foregroundColor(checkpoint.isCompleted ? .gray : .primary)
-                                            .strikethrough(checkpoint.isCompleted, color: .gray)
-                                        Spacer()
+                            
+                            VStack(alignment: .leading, spacing: 16) {
+                                DisclosureGroup(
+                                    isExpanded: $showCheckpoints,
+                                    content: {
+                                        VStack(alignment: .leading, spacing: 0) {
+                                            ForEach(Array(journey.checkpoints.enumerated()), id: \.1.id) { index, checkpoint in
+                                                HStack(alignment: .top, spacing: 2) {
+                                                    // Dot and line
+                                                    VStack(spacing: 0) {
+                                                        ZStack {
+                                                            Circle()
+                                                                .fill(checkpoint.isCompleted ? Color.green : Color.gray)
+                                                                .frame(width: 7, height: 7)
+                                                            
+                                                            Circle()
+                                                                .stroke(checkpoint.isCompleted ? Color.green.opacity(0.4) : Color.gray.opacity(0.3), lineWidth: 2)
+                                                                .frame(width: 12, height: 12)
+                                                        }
+                                                        
+                                                        if index < journey.checkpoints.count - 1 {
+                                                            Rectangle()
+                                                                .fill(Color.gray.opacity(0.3))
+                                                                .frame(width: 1.2, height: 20)
+                                                                .padding(.top, 2)
+                                                        }
+                                                    }
+                                                    .frame(width: 16)
+                                                    .padding(.top, 2)
+                                                    
+                                                    // Checkpoint title
+                                                    Text(checkpoint.title)
+                                                        .font(.caption)
+                                                        .fontWeight(.medium)
+                                                        .foregroundColor(checkpoint.isCompleted ? .gray : .primary)
+                                                        .strikethrough(checkpoint.isCompleted, color: .gray)
+                                                        .padding(.vertical, 6)
+                                                        .padding(.horizontal, 14)
+                                                        .background(
+                                                            RoundedRectangle(cornerRadius: 8)
+                                                                .fill(Color(.secondarySystemBackground))
+                                                        )
+                                                        .overlay(
+                                                            RoundedRectangle(cornerRadius: 8)
+                                                                .stroke(Color(.separator), lineWidth: 0.5)
+                                                        )
+                                                }
+                                                .padding(.bottom, 2)
+                                                
+                                            }
+                                            
+                                        }
+                                        .transition(.opacity.combined(with: .move(edge: .top)))
+                                        .padding(.horizontal)
+                                        .padding(.top, 24)
+                                    },
+                                    label: {
+                                        Label {
+                                            Text("Checkpoints")
+                                                .font(.subheadline)
+                                                .fontWeight(.semibold)
+                                        } icon: {
+                                            Image(systemName: showCheckpoints ? "chevron.down.circle.fill" : "chevron.right.circle.fill")
+                                        }
+                                        .foregroundColor(.accentColor)
                                     }
-                                    .padding()
-                                    .background(Color(.secondarySystemBackground))
-                                    .cornerRadius(10)
-                                }
+                                )
+                                .padding()
+                                .background(
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .fill(Color(.secondarySystemBackground))
+                                        .shadow(color: Color.black.opacity(0.05), radius: 4, x: 0, y: 2)
+                                )
                             }
                             .padding(.horizontal)
+                            
+                            
                             
                             // ✅ Conditionally show the button only if `user` is not nil
                             if let user = user {
