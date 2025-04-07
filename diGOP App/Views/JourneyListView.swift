@@ -18,13 +18,14 @@ enum JourneySortOption: String, CaseIterable, Identifiable {
 
 struct EditNameView: View {
     @Bindable var user: UserProfile
-    @Environment(\.dismiss) var dismiss
-    
+    @Binding var isPresented: Bool
+    @State private var tempName: String = ""
+
     var body: some View {
         NavigationStack {
             Form {
                 Section {
-                    TextField("Your name", text: $user.name)
+                    TextField("Your name", text: $tempName)
                         .autocapitalization(.words)
                 }
             }
@@ -33,18 +34,26 @@ struct EditNameView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") {
-                        dismiss()
+                        isPresented = false
                     }
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Save") {
-                        dismiss()
+                        user.name = tempName
+                        isPresented = false
                     }
                 }
             }
         }
+        .onAppear {
+            tempName = user.name // Pre-fill with current name when sheet appears
+        }
     }
 }
+#Preview {
+    
+}
+
 
 struct JourneyListView: View {
     @State private var selectedSortOption: JourneySortOption = .alphabetical
@@ -83,7 +92,7 @@ struct JourneyListView: View {
                     if let user = userProfiles.first {
                         ProfileCardView(user: user, isEditingName: $isEditingName)
                             .sheet(isPresented: $isEditingName) {
-                                EditNameView(user: user)
+                                EditNameView(user: user, isPresented: $isEditingName)
                                     .presentationDetents([.medium])
                                     .presentationDragIndicator(.visible)
                             }
@@ -101,7 +110,7 @@ struct JourneyListView: View {
                                 .fontWeight(.bold)
                                 .foregroundColor(.primary)
                             
-                            Text("Choose a journey to start!")
+                            Text("Where do we feel like exploring today?")
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                             
