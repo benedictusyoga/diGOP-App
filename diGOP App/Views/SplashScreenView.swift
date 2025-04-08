@@ -46,7 +46,8 @@ struct SplashScreenView: View {
                             Text("Welcome to")
                                 .font(.subheadline)
                             Text("diGOP")
-                                .font(.system(size: 60, weight: .bold))
+                                .font(.system(size: 80, weight: .black, design: .rounded))
+                                .foregroundColor(Color(.systemBlue))
                             Spacer()
                                 .sensoryFeedback(.impact, trigger: bounceDown)
                         }

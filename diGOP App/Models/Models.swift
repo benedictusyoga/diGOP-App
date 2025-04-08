@@ -11,11 +11,7 @@ import SwiftData
 import MapKit
 
 enum Rank: String, CaseIterable, Codable {
-    case novice
-    case explorer
-    case adventurer
-    case master
-    case legend
+    case novice, explorer, adventurer, master, legend
     
     var minXP: Int {
         switch self {
@@ -52,6 +48,9 @@ enum Rank: String, CaseIterable, Codable {
         case .legend: return "avatar_legend"
         }
     }
+    var displayName: String {
+            rawValue.capitalized
+        }
     
     var nextRank: Rank? {
         let all = Rank.allCases

@@ -19,7 +19,18 @@ struct JourneyImageLoader: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 100, height: 100)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color(.tertiarySystemBackground), lineWidth: 2))
+                .overlay(
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.blue, Color.indigo],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                )
+            
                 .background(Circle().fill(Color(.tertiarySystemBackground)))
                 .rotationEffect(.degrees(isExpanded ? -20 : 0))
                 .animation(.easeInOut(duration: 0.3), value: isExpanded)
@@ -30,7 +41,18 @@ struct JourneyImageLoader: View {
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 100, height: 100)
                 .clipShape(Circle())
-                .overlay(Circle().stroke(Color(.tertiarySystemBackground), lineWidth: 2))
+                .overlay(
+                    Circle()
+                        .stroke(
+                            LinearGradient(
+                                colors: [Color.blue, Color.indigo],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 4
+                        )
+                )
+            
                 .background(Circle().fill(Color(.tertiarySystemBackground)))
                 .rotationEffect(.degrees(isExpanded ? -20 : 0))
                 .animation(.easeInOut(duration: 0.3), value: isExpanded)

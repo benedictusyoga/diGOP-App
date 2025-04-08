@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "DAEDBC03-F889-4FA5-9DD7-65DCE3DDE2BB_4_5005_c.jpeg",
+      "filename" : "avatar_adventurer.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "DAEDBC03-F889-4FA5-9DD7-65DCE3DDE2BB_4_5005_c 1.jpeg",
+      "filename" : "avatar_adventurer 1.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "DAEDBC03-F889-4FA5-9DD7-65DCE3DDE2BB_4_5005_c 2.jpeg",
+      "filename" : "avatar_adventurer 2.png",
       "idiom" : "universal",
       "scale" : "3x"
     }
