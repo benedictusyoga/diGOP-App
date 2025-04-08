@@ -44,7 +44,7 @@ struct SplashScreenView: View {
                                 .offset(y:floatUp ? -35 : 0)
                                 .animation(.easeInOut(duration: 0.6).delay(0.2), value: floatUp)
                             Text("Welcome to")
-                                .font(.subheadline)
+                                .font(.headline)
                             Text("diGOP")
                                 .font(.system(size: 80, weight: .black, design: .rounded))
                                 .foregroundColor(Color(.systemBlue))

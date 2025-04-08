@@ -17,17 +17,13 @@ struct JourneyImageLoader: View {
             Image(uiImage: uiIMage)
                 .resizable()
                 .aspectRatio(contentMode: .fill)
-                .frame(width: 100, height: 100)
+                .frame(width: 120, height: 120)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
                         .stroke(
-                            LinearGradient(
-                                colors: [Color.blue, Color.indigo],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 4
+                            Color(.systemBackground),
+                            lineWidth: 8
                         )
                 )
             
@@ -39,17 +35,13 @@ struct JourneyImageLoader: View {
             Image(systemName: placeholder)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 100, height: 100)
+                .frame(width: 120, height: 120)
                 .clipShape(Circle())
                 .overlay(
                     Circle()
                         .stroke(
-                            LinearGradient(
-                                colors: [Color.blue, Color.indigo],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 4
+                            Color(.systemBackground),
+                            lineWidth: 8
                         )
                 )
             
@@ -60,4 +52,8 @@ struct JourneyImageLoader: View {
                 .foregroundColor(Color(.systemGray2))
         }
     }
+}
+
+#Preview {
+    JourneyListView()
 }
