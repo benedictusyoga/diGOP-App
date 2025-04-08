@@ -13,57 +13,18 @@ struct ProfileCardView: View {
     @Binding var isEditingName: Bool
     @State private var selectedInfo: InfoType? = nil
     
-    
-    
     var body: some View {
-        VStack(spacing: 28) {
+        VStack(spacing: 16) {
             // MARK: - Avatar, Name & Rank
-            HStack(alignment: .center, spacing: 20) {
-                Image(user.avatarName)
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 64, height: 64)
-                    .clipShape(Circle())
-                    .onTapGesture {
-                        selectedInfo = .avatar
-                    }
-                
-                VStack(alignment: .leading, spacing: 6) {
-                    Button {
-                        isEditingName = true
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text(user.name)
-                                .font(.title)
-                                .fontWeight(.semibold)
-                            
-                            Image(systemName: "pencil")
-                                .font(.title)
-                                .foregroundColor(.accentColor)
-                        }
-                    }
-                    .buttonStyle(.plain)
-                    
-                    HStack{
-                        Text("Rank:")
-                            .font(.caption)
-                        Text(user.rank.rawValue.capitalized)
-                            .font(.caption)
-                            .fontWeight(.medium)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 4)
-                            .background(Color.accentColor.opacity(0.1))
-                            .cornerRadius(6)
-                            .foregroundColor(.accentColor)
-                        Spacer()
-                    }
-                }
-                
-                Spacer()
+            VStack {
+                    Text("Profile")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .foregroundColor(.primary)
+                Divider()
             }
-            .padding(.horizontal)
-            
-            // MARK: - XP Stat Cards
+            .padding(.horizontal, 24)
+            .padding(.bottom, 8)
             HStack(spacing: 16) {
                 // Lifetime XP Card
                 VStack(alignment: .leading, spacing: 10) {
@@ -76,7 +37,7 @@ struct ProfileCardView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                 }
-                .frame(minHeight: 60, alignment: .leading)
+                .frame(minHeight: 30, alignment: .leading)
                 .padding()
                 .background(
                     RoundedRectangle(cornerRadius: 16)
@@ -92,8 +53,70 @@ struct ProfileCardView: View {
                 .onTapGesture {
                     selectedInfo = .lifetimeXP
                 }
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack{
+                        Image(systemName: "person.text.rectangle.fill")
+                            .scaledToFit()
+                            .frame(width: 16, height: 16)
+                            .foregroundStyle(.secondary)
+                        Text("Name:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    Button {
+                        isEditingName = true
+                    } label: {
+                        HStack(spacing: 6) {
+                            Text(user.name)
+                                .font(.title)
+                                .fontWeight(.semibold)
+                            
+                            Image(systemName: "pencil")
+                                .font(.title)
+                                .foregroundColor(.accentColor)
+                        }
+                    }
+                    .buttonStyle(.plain)
+                    
+                    
+                }
+                .frame(maxWidth: .infinity)
                 
                 // XP to Next Rank Card
+                
+            }
+            .padding(.horizontal, 32)
+            HStack(alignment: .center, spacing: 16) {
+                VStack (alignment: .center){
+                    
+                    HStack{
+                        Image(systemName: "shield.lefthalf.filled")
+                            .scaledToFit()
+                            .frame(width: 16, height: 16)
+                            .foregroundStyle(.secondary)
+                        Text("Your Rank:")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Image(user.avatarName)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: 48, height: 48)
+                        .clipShape(Circle())
+                        .onTapGesture {
+                            selectedInfo = .avatar
+                        }
+                    Text(user.rank.rawValue.capitalized)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 4)
+                        .background(Color.accentColor.opacity(0.1))
+                        .cornerRadius(6)
+                        .foregroundColor(.accentColor)
+                    
+                }
                 VStack(alignment: .leading, spacing: 10) {
                     Text("To Next Rank")
                         .font(.caption)
@@ -138,8 +161,13 @@ struct ProfileCardView: View {
                 .onTapGesture{
                     selectedInfo = .nextRankXP
                 }
+                
+                
             }
-            .padding(.horizontal)
+            .padding(.horizontal, 32)
+            
+            // MARK: - XP Stat Cards
+            
             
         }
         .padding(.vertical, 24)
@@ -230,7 +258,7 @@ struct ProfileInfoSheet: View {
                         .font(.headline)
                         .padding(.top, 4)
                         .foregroundColor(.accentColor)
-
+                    
                     ForEach(Rank.allCases, id: \.self) { rank in
                         HStack(spacing: 16) {
                             Image(rank.avatarImageName)
@@ -238,16 +266,16 @@ struct ProfileInfoSheet: View {
                                 .scaledToFit()
                                 .frame(width: 40, height: 40)
                                 .clipShape(Circle())
-
+                            
                             VStack(alignment: .leading) {
                                 Text(rank.displayName)
                                     .font(.subheadline.bold())
-
+                                
                                 Text("\(rank.minXP) XP")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                             }
-
+                            
                             Spacer()
                         }
                         .padding()
@@ -256,7 +284,7 @@ struct ProfileInfoSheet: View {
                     }
                 }
             }
-
+            
             
         }
     }

@@ -20,7 +20,7 @@ struct EditNameView: View {
     @Bindable var user: UserProfile
     @Binding var isPresented: Bool
     @State private var tempName: String = ""
-
+    
     var body: some View {
         NavigationStack {
             Form {
