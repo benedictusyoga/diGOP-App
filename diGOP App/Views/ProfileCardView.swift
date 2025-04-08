@@ -17,44 +17,18 @@ struct ProfileCardView: View {
         VStack(spacing: 16) {
             // MARK: - Avatar, Name & Rank
             VStack {
-                    Text("Profile")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .foregroundColor(.primary)
+                Text("Your Profile")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .foregroundColor(.primary)
                 Divider()
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 32)
             .padding(.bottom, 8)
             HStack(spacing: 16) {
                 // Lifetime XP Card
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Lifetime XP")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.9))
-                    
-                    Text("\(user.totalXP) XP")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                }
-                .frame(minHeight: 30, alignment: .leading)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.blue, Color.indigo],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
-                )
-                .onTapGesture {
-                    selectedInfo = .lifetimeXP
-                }
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack{
+                VStack(alignment: .leading, spacing: 2) {
+                    HStack(alignment: .top){
                         Image(systemName: "person.text.rectangle.fill")
                             .scaledToFit()
                             .frame(width: 16, height: 16)
@@ -62,31 +36,44 @@ struct ProfileCardView: View {
                         Text("Name:")
                             .font(.caption)
                             .foregroundColor(.secondary)
+                        Spacer()
                     }
                     Button {
                         isEditingName = true
                     } label: {
-                        HStack(spacing: 6) {
-                            Text(user.name)
-                                .font(.title)
-                                .fontWeight(.semibold)
-                            
-                            Image(systemName: "pencil")
-                                .font(.title)
-                                .foregroundColor(.accentColor)
-                        }
+                        Text(user.name)
+                            .font(.largeTitle)
+                            .fontWeight(.semibold)
+                        
+                        Image(systemName: "pencil")
+                            .scaledToFit()
+                            .frame(width: 24, height: 24)
+                            .foregroundColor(.accentColor)
+                        Spacer()
+                        
                     }
                     .buttonStyle(.plain)
+                    Divider()
+                    
                     
                     
                 }
                 .frame(maxWidth: .infinity)
+                .padding(.horizontal, 24)
+                .padding(.vertical, 16)
+                .background(Color(.secondarySystemBackground))
+                .cornerRadius(12)
+                
+                
+                
                 
                 // XP to Next Rank Card
                 
             }
-            .padding(.horizontal, 32)
-            HStack(alignment: .center, spacing: 16) {
+            .padding(.horizontal, 24)
+
+            HStack(alignment: .center, spacing: 24) {
+                // INI BUAT XP
                 VStack (alignment: .center){
                     
                     HStack{
@@ -102,7 +89,7 @@ struct ProfileCardView: View {
                     Image(user.avatarName)
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 48, height: 48)
+                        .frame(width: 82, height: 82)
                         .clipShape(Circle())
                         .onTapGesture {
                             selectedInfo = .avatar
@@ -117,50 +104,83 @@ struct ProfileCardView: View {
                         .foregroundColor(.accentColor)
                     
                 }
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("To Next Rank")
-                        .font(.caption)
-                        .foregroundColor(.white.opacity(0.9))
-                    
-                    let progress = user.totalXP - user.rank.minXP
-                    let required = user.rank.requiredXP
-                    let progressRatio = min(Double(progress) / Double(required), 1.0)
-                    
-                    Text("\(progress) / \(required) XP")
-                        .font(.subheadline)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white)
-                    
-                    ZStack(alignment: .leading) {
-                        RoundedRectangle(cornerRadius: 6)
-                            .frame(height: 6)
-                            .foregroundColor(Color.white.opacity(0.25))
+                VStack(alignment: .leading){
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("To Next Rank")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.9))
                         
-                        GeometryReader { geometry in
+                        let progress = user.totalXP - user.rank.minXP
+                        let required = user.rank.requiredXP
+                        let progressRatio = min(Double(progress) / Double(required), 1.0)
+                        
+                        Text("\(progress) / \(required) XP")
+                            .font(.subheadline)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                        
+                        ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: 6)
-                                .frame(width: geometry.size.width * CGFloat(progressRatio), height: 6)
-                                .foregroundColor(.white)
-                                .animation(.easeOut(duration: 0.4), value: progressRatio)
+                                .frame(height: 6)
+                                .foregroundColor(Color.white.opacity(0.25))
+                            
+                            GeometryReader { geometry in
+                                RoundedRectangle(cornerRadius: 6)
+                                    .frame(width: geometry.size.width * CGFloat(progressRatio), height: 6)
+                                    .foregroundColor(.white)
+                                    .animation(.easeOut(duration: 0.4), value: progressRatio)
+                            }
+                            .frame(height: 6)
                         }
-                        .frame(height: 6)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 20)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.green, Color.teal],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
+                    )
+                    .onTapGesture{
+                        selectedInfo = .nextRankXP
+                    }
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("All-Time")
+                            .font(.caption)
+                            .foregroundColor(.white.opacity(0.9))
+                        
+                        Text("\(user.totalXP) XP")
+                            .font(.title2)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white)
+                    }
+                    .frame(maxWidth: .infinity, minHeight: 30, alignment: .leading)
+                    .padding()
+                    .background(
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color.blue, Color.indigo],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                            .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
+                    )
+                    .onTapGesture {
+                        selectedInfo = .lifetimeXP
                     }
                 }
-                .frame(maxWidth: .infinity, minHeight: 60)
-                .padding()
-                .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color.green, Color.teal],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: Color.black.opacity(0.1), radius: 6, x: 0, y: 4)
-                )
-                .onTapGesture{
-                    selectedInfo = .nextRankXP
-                }
+                
+                
+                
+                
+                
                 
                 
             }
@@ -176,7 +196,7 @@ struct ProfileCardView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
         )
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 12)
         .sheet(item: $selectedInfo) { infoType in
             ProfileInfoSheet(infoType: infoType)
         }
@@ -363,3 +383,15 @@ struct ProfileInfoSheet: View {
 }
 
 
+#Preview {
+    struct ProfileCardPreviewWrapper: View {
+        @State private var isEditingName = false
+        @State private var mockUser = UserProfile(name: "Yoga", totalXP: 1000)
+        
+        var body: some View {
+            ProfileCardView(user: mockUser, isEditingName: $isEditingName)
+        }
+    }
+    
+    return ProfileCardPreviewWrapper()
+}
