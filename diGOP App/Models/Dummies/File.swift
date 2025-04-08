@@ -33,9 +33,17 @@ extension Journey {
 extension Checkpoint {
     static var gopCheckpoints: [Checkpoint] {
         return [
-            Checkpoint(title: "Main Lobby", desc: "Entry point of GOP 9.", imageName: "gop1", latitude: -6.3026, longitude: 106.6527),
-            Checkpoint(title: "Conference Hall", desc: "Big meeting space.", imageName: "gop2", latitude: -6.3025, longitude: 106.6528),
-            Checkpoint(title: "Rooftop Garden", desc: "Relaxing green space.", imageName: "gop3", latitude: -6.3024, longitude: 106.6529)
+            Checkpoint(title: "Main Lobby", desc: "Entry point of GOP 9.", imageName: "Checkpoint1", latitude: -6.3026, longitude: 106.6527),
+            Checkpoint(title: "Conference Hall", desc: "Big meeting space.", imageName: "Checkpoint2", latitude: -6.3025, longitude: 106.6528),
+            Checkpoint(title: "Rooftop Garden", desc: "Relaxing green space.", imageName: "Checkpoint3", latitude: -6.3024, longitude: 106.6529),
+            Checkpoint(title: "Executive Office", desc: "Where decisions are made.", imageName: "Checkpoint4", latitude: -6.3023, longitude: 106.6530),
+            Checkpoint(title: "Innovation Lab", desc: "Creative workspace for ideas.", imageName: "Checkpoint5", latitude: -6.3022, longitude: 106.6531),
+            Checkpoint(title: "Cafeteria", desc: "Grab a coffee and recharge.", imageName: "Checkpoint6", latitude: -6.3021, longitude: 106.6532),
+            Checkpoint(title: "Meeting Room", desc: "Collaborative space for teams.", imageName: "Checkpoint7", latitude: -6.3020, longitude: 106.6533),
+            Checkpoint(title: "Lounge Area", desc: "Relax and network with colleagues.", imageName: "Checkpoint8", latitude: -6.3019, longitude: 106.6534),
+            Checkpoint(title: "Fitness Center", desc: "Stay healthy and active.", imageName: "Checkpoint9", latitude: -6.3018, longitude: 106.6535),
+            Checkpoint(title: "Parking Area", desc: "Convenient access to your vehicle.", imageName: "Checkpoint10", latitude: -6.3017, longitude: 106.6536),
+            Checkpoint(title: "Security Desk", desc: "Ensuring safety for everyone.", imageName: "Checkpoint11", latitude: -6.3016, longitude: 106.6537)
         ]
     }
 
