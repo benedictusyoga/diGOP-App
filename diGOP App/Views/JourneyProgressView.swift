@@ -565,53 +565,54 @@ struct JourneyCompleteView: View {
     let journey: Journey
     let totalXP: Int
     @Environment(\.dismiss) private var dismiss
+    @State private var navigateToJourneyList = false
     
     var body: some View {
-        VStack(spacing: 24) {
-            // Celebration Image/Icon
-            Image(systemName: "star.circle.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 120, height: 120)
-                .foregroundColor(.yellow)
-                .padding(.top, 40)
-            
-            // Congratulations Text
-            Text("Journey Complete!")
-                .font(.system(size: 32, weight: .bold))
-                .multilineTextAlignment(.center)
-            
-            // XP Gained
-            VStack(spacing: 8) {
-                Text("You've earned")
-                    .font(.title2)
-                Text("+\(totalXP) XP")
-                    .font(.system(size: 48, weight: .bold))
-                    .foregroundColor(.blue)
-            }
-            .padding(.vertical, 20)
-            
-            Spacer()
-            
-            // Back to Journey List Button
-            Button(action: {
-                dismiss()
-            }) {
-                HStack {
-                    Image(systemName: "arrow.left")
-                    Text("Back to Journeys")
+        NavigationView {
+            VStack(spacing: 24) {
+                // Celebration Image/Icon
+                Image(systemName: "star.circle.fill")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 120, height: 120)
+                    .foregroundColor(.yellow)
+                    .padding(.top, 40)
+                
+                // Congratulations Text
+                Text("Journey Complete!")
+                    .font(.system(size: 32, weight: .bold))
+                    .multilineTextAlignment(.center)
+                
+                // XP Gained
+                VStack(spacing: 8) {
+                    Text("You've earned")
+                        .font(.title2)
+                    Text("+\(totalXP) XP")
+                        .font(.system(size: 48, weight: .bold))
+                        .foregroundColor(.blue)
                 }
-                .font(.headline)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .padding()
-                .background(Color.blue)
-                .cornerRadius(12)
+                .padding(.vertical, 20)
+                
+                Spacer()
+                
+                // Back to Journey List Button
+                NavigationLink(destination: JourneyListView(), isActive: $navigateToJourneyList) {
+                    HStack {
+                        Text("Back to Journeys")
+                    }
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(Color.blue)
+                    .cornerRadius(12)
+                }
+                .padding(.horizontal)
+                .padding(.bottom, 32)
             }
-            .padding(.horizontal)
-            .padding(.bottom, 32)
+            .navigationBarHidden(true)
         }
-        .navigationBarHidden(true)
+        .navigationViewStyle(.stack)
     }
 }
 
