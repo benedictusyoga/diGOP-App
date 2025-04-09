@@ -21,10 +21,13 @@ struct NameInputView: View {
             VStack(spacing: 20){
                 LogoView(offset: -20)
                 VStack{
-                    Text("Hi! Let's get acquainted!")
+                    Text("Hey there! Before starting your journey,")
                         .font(.subheadline)
-                    Text("What can I call you?")
-                        .font(.title3)
+                    Text("What can we call you?")
+                        .font(.title)
+                        .fontWeight(.bold)
+                        .fontDesign(.rounded)
+                        .foregroundStyle(Color(.systemBlue))
                 }
                 
                 TextField("Nickname", text: $name)
