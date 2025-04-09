@@ -24,56 +24,66 @@ struct ProfileCardView: View {
                         .scaledToFit()
                         .frame(width: 16, height: 16)
                     Text("Your Explorer Profile")
-                        .font(.headline)
+                        .font(.title3)
                         .fontWeight(.heavy)
                         .foregroundColor(Color(.systemBlue))
                         .fontDesign(.rounded)
                 }
-                Divider()
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 8)
 
             // Name section (always visible)
             HStack(spacing: 16) {
+                // Lifetime XP Card
                 VStack(alignment: .leading, spacing: 2) {
-                    HStack(alignment: .top) {
-                        Image(systemName: "person.text.rectangle.fill")
-                            .scaledToFit()
-                            .frame(width: 16, height: 16)
-                            .foregroundStyle(.secondary)
-                        Text("Name:")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
-                        Spacer()
+                    HStack(spacing: 12){
+                    
+                        VStack(alignment: .leading, spacing: 2){
+                        
+                                
+                            Text("Hey There,")
+                            
+                            
+                            VStack (spacing: 0){
+                                Button {
+                                    isEditingName = true
+                                } label: {
+                                    HStack {
+                                        Text(user.name)
+                                            .font(.largeTitle)
+                                            .fontWeight(.heavy)
+                                            .fontDesign(.rounded)
+                                        Spacer()
+                                        Image(systemName: "chevron.right")
+                                            .scaledToFit()
+                                            .frame(width: 24, height: 24)
+                                            .foregroundColor(.accentColor)
+                                        
+                                    }
+                                }
+                                .buttonStyle(.plain)
+//                                Divider()
+                            }
                     }
-
-                    Button {
-                        isEditingName = true
-                    } label: {
-                        HStack {
-                            Text(user.name)
-                                .font(.largeTitle)
-                                .fontWeight(.heavy)
-                                .fontDesign(.rounded)
-                            Image(systemName: "pencil")
-                                .scaledToFit()
-                                .frame(width: 24, height: 24)
-                                .foregroundColor(.accentColor)
-                            Spacer()
-                        }
+                    
                     }
-                    .buttonStyle(.plain)
-                    Divider()
+                    
 
                     // Toggle button
                     
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, 24)
-                .padding(.vertical, 16)
+                .padding(.vertical, 12)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
+                
+                
+                
+                
+                // XP to Next Rank Card
+                
             }
             .padding(.horizontal, 24)
             Button(action: {
@@ -213,6 +223,7 @@ struct ProfileCardView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
         )
+        .padding(.horizontal, 0)
         .sheet(item: $selectedInfo) { infoType in
             ProfileInfoSheet(infoType: infoType)
         }
