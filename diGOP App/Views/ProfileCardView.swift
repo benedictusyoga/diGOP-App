@@ -36,6 +36,7 @@ struct ProfileCardView: View {
 
             // Name section (always visible)
             HStack(spacing: 16) {
+                // Lifetime XP Card
                 VStack(alignment: .leading, spacing: 2) {
                     HStack(alignment: .top) {
                         Image(systemName: "person.text.rectangle.fill")
@@ -74,6 +75,12 @@ struct ProfileCardView: View {
                 .padding(.vertical, 16)
                 .background(Color(.secondarySystemBackground))
                 .cornerRadius(12)
+                
+                
+                
+                
+                // XP to Next Rank Card
+                
             }
             .padding(.horizontal, 24)
             Button(action: {
@@ -213,6 +220,7 @@ struct ProfileCardView: View {
                 .fill(Color(.systemBackground))
                 .shadow(color: Color.black.opacity(0.05), radius: 12, x: 0, y: 4)
         )
+        .padding(.horizontal, 12)
         .sheet(item: $selectedInfo) { infoType in
             ProfileInfoSheet(infoType: infoType)
         }
