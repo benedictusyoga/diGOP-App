@@ -2,6 +2,7 @@ import SwiftUI
 import SwiftData
 import UIKit
 
+// Checkpoint Progress Dot
 struct CheckpointProgressDot: View {
     let isActive: Bool
     let isCompleted: Bool
@@ -10,7 +11,7 @@ struct CheckpointProgressDot: View {
         ZStack {
             Circle()
                 .fill(isActive ? Color.red : (isCompleted ? Color.blue : Color.gray))
-                .frame(width: 12, height: 12)
+                .frame(width: 20, height: 20)
             
             if isActive {
                 Circle()
@@ -20,7 +21,6 @@ struct CheckpointProgressDot: View {
         }
     }
 }
-
 struct CheckpointCard: View {
     let checkpoint: Checkpoint
     let xpReward: Int
@@ -74,11 +74,32 @@ struct CheckpointCard: View {
         .cornerRadius(12)
         .shadow(radius: isActive ? 5 : 2)
         .scaleEffect(isActive ? 1.0 : 0.95)
-        .opacity(isActive ? 1.0 : 0.8)
+        .opacity(isActive ? 1.0 : 0.6)
     }
 }
 
-// Add these new cell classes
+// Helper extension for rounded corners
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
+        clipShape(RoundedCorner(radius: radius, corners: corners))
+    }
+}
+
+struct RoundedCorner: Shape {
+    var radius: CGFloat = .infinity
+    var corners: UIRectCorner = .allCorners
+    
+    func path(in rect: CGRect) -> Path {
+        let path = UIBezierPath(
+            roundedRect: rect,
+            byRoundingCorners: corners,
+            cornerRadii: CGSize(width: radius, height: radius)
+        )
+        return Path(path.cgPath)
+    }
+}
+
+// Start Card
 class StartCard: UICollectionViewCell {
     private let containerView = UIView()
     private let titleLabel = UILabel()
@@ -141,7 +162,7 @@ class StartCard: UICollectionViewCell {
         ])
     }
 }
-
+// End Card
 class EndCard: UICollectionViewCell {
     private let containerView = UIView()
     private let titleLabel = UILabel()
@@ -216,6 +237,61 @@ class EndCard: UICollectionViewCell {
     }
 }
 
+// Journey Complete View
+struct JourneyCompleteView: View {
+    let journey: Journey
+    let totalXP: Int
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.presentationMode) private var presentationMode
+    
+    var body: some View {
+        VStack(spacing: 24) {
+            // Celebration Image/Icon
+            Image(systemName: "star.circle.fill")
+                .resizable()
+                .scaledToFit()
+                .frame(width: 120, height: 120)
+                .foregroundColor(.yellow)
+                .padding(.top, 40)
+            
+            // Congratulations Text
+            Text("Journey Complete!")
+                .font(.system(size: 32, weight: .bold))
+                .multilineTextAlignment(.center)
+            
+            // XP Gained
+            VStack(spacing: 8) {
+                Text("You've earned")
+                    .font(.title2)
+                Text("+\(totalXP) XP")
+                    .font(.system(size: 48, weight: .bold))
+                    .foregroundColor(.blue)
+            }
+            .padding(.vertical, 20)
+            
+            Spacer()
+            
+            // Back to Journey List Button
+            Button(action: {
+                presentationMode.wrappedValue.dismiss()
+            }) {
+                HStack {
+                    Text("Back to Journeys")
+                }
+                .font(.headline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.blue)
+                .cornerRadius(12)
+            }
+            .padding(.horizontal)
+            .padding(.bottom, 32)
+        }
+        .navigationBarHidden(true)
+    }
+}
+
 // UICollectionView wrapper for SwiftUI
 struct SnapScrollingCollectionView: UIViewRepresentable {
     let items: [Checkpoint]
@@ -230,7 +306,7 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
     func makeUIView(context: Context) -> UICollectionView {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
-        layout.minimumLineSpacing = 10
+        layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -249,18 +325,12 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
         // Calculate insets to center first and last cards
         let screenHeight = UIScreen.main.bounds.height
         let cardHeight = screenHeight * 0.75
-        let topBottomInset = (screenHeight - cardHeight) / 4  // Reduced from /2 to /4 to make top space smaller
-        
-        print("Debug values:")
-        print("Screen height:", screenHeight)
-        print("Card height:", cardHeight)
-        print("Top bottom inset:", topBottomInset)
-        print("Final top inset:", topBottomInset - 800)
+        let topBottomInset = (cardHeight - screenHeight) / 2
         
         collectionView.contentInset = UIEdgeInsets(
-            top: 0,
+            top: topBottomInset,
             left: 0,
-            bottom: 0,
+            bottom: topBottomInset,
             right: 0
         )
         
@@ -296,14 +366,6 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
                 return cell
             }
         }
-        
-        // func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        //     if kind == UICollectionView.elementKindSectionHeader {
-        //         let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "HeaderView", for: indexPath) as! HeaderView
-        //         return headerView
-        //     }
-        //     return UICollectionReusableView()
-        // }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
             return CGSize(width: collectionView.bounds.width, height: 100)
@@ -502,7 +564,7 @@ class CheckpointCell: UICollectionViewCell {
         }
         
         // Apply active/inactive state
-        alpha = isActive ? 1.0 : 0.8
+        alpha = isActive ? 1.0 : 0.6
         transform = isActive ? .identity : CGAffineTransform(scaleX: 0.95, y: 0.95)
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOpacity = isActive ? 0.2 : 0.1
@@ -521,101 +583,6 @@ class CheckpointCell: UICollectionViewCell {
     }
 }
 
-// class HeaderView: UICollectionReusableView {
-//     private let titleLabel = UILabel()
-//     private let subtitleLabel = UILabel()
-//     private let stackView = UIStackView()
-    
-//     override init(frame: CGRect) {
-//         super.init(frame: frame)
-//         setupUI()
-//     }
-    
-//     required init?(coder: NSCoder) {
-//         fatalError("init(coder:) has not been implemented")
-//     }
-    
-//     private func setupUI() {
-//         stackView.axis = .vertical
-//         stackView.spacing = 8
-//         stackView.alignment = .leading
-//         stackView.translatesAutoresizingMaskIntoConstraints = false
-//         addSubview(stackView)
-        
-//         titleLabel.text = "Start Here"
-//         titleLabel.font = .systemFont(ofSize: 28, weight: .bold)
-        
-//         subtitleLabel.text = "Find this checkpoint to kick off your Journey!"
-//         subtitleLabel.font = .systemFont(ofSize: 14)
-//         subtitleLabel.textColor = .systemBlue
-        
-//         stackView.addArrangedSubview(titleLabel)
-//         stackView.addArrangedSubview(subtitleLabel)
-        
-//         NSLayoutConstraint.activate([
-//             stackView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-//             stackView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-//             stackView.centerYAnchor.constraint(equalTo: centerYAnchor)
-//         ])
-//     }
-// }
-
-// Add JourneyCompleteView
-struct JourneyCompleteView: View {
-    let journey: Journey
-    let totalXP: Int
-    @Environment(\.dismiss) private var dismiss
-    @State private var navigateToJourneyList = false
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 24) {
-                // Celebration Image/Icon
-                Image(systemName: "star.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 120, height: 120)
-                    .foregroundColor(.yellow)
-                    .padding(.top, 40)
-                
-                // Congratulations Text
-                Text("Journey Complete!")
-                    .font(.system(size: 32, weight: .bold))
-                    .multilineTextAlignment(.center)
-                
-                // XP Gained
-                VStack(spacing: 8) {
-                    Text("You've earned")
-                        .font(.title2)
-                    Text("+\(totalXP) XP")
-                        .font(.system(size: 48, weight: .bold))
-                        .foregroundColor(.blue)
-                }
-                .padding(.vertical, 20)
-                
-                Spacer()
-                
-                // Back to Journey List Button
-                NavigationLink(destination: JourneyListView(), isActive: $navigateToJourneyList) {
-                    HStack {
-                        Text("Back to Journeys")
-                    }
-                    .font(.headline)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.blue)
-                    .cornerRadius(12)
-                }
-                .padding(.horizontal)
-                .padding(.bottom, 32)
-            }
-            .navigationBarHidden(true)
-        }
-        .navigationViewStyle(.stack)
-    }
-}
-
 // Modify JourneyProgressView to add complete button
 struct JourneyProgressView: View {
     @Environment(\.modelContext) private var modelContext
@@ -625,13 +592,13 @@ struct JourneyProgressView: View {
     
     @State private var currentIndex: Int? = 0
     @State private var showingCompleteView = false
+    @State private var shouldNavigateToJourneyList = false
     
     var body: some View {
         GeometryReader { geometry in
             HStack(spacing: 20) {
                 // Vertical Progress Tracker
                 VStack(spacing: 0) {
-                    Spacer()
                     VStack(spacing: 0) {
                         ForEach(0..<journey.checkpoints.count, id: \.self) { index in
                             VStack(spacing: 0) {
@@ -648,7 +615,6 @@ struct JourneyProgressView: View {
                             }
                         }
                     }
-                    Spacer()
                 }
                 .frame(height: geometry.size.height * 0.5)
                 
@@ -671,6 +637,10 @@ struct JourneyProgressView: View {
             .fullScreenCover(isPresented: $showingCompleteView) {
                 JourneyCompleteView(journey: journey, totalXP: journey.checkpoints.count * journey.xpReward)
             }
+            .navigationDestination(isPresented: $shouldNavigateToJourneyList) {
+                JourneyListView()
+                    .navigationBarBackButtonHidden(true)
+            }
         }
     }
     
@@ -680,26 +650,10 @@ struct JourneyProgressView: View {
         
         // Show completion view
         showingCompleteView = true
-    }
-}
-
-// Helper extension for rounded corners
-extension View {
-    func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
-        clipShape(RoundedCorner(radius: radius, corners: corners))
-    }
-}
-
-struct RoundedCorner: Shape {
-    var radius: CGFloat = .infinity
-    var corners: UIRectCorner = .allCorners
-    
-    func path(in rect: CGRect) -> Path {
-        let path = UIBezierPath(
-            roundedRect: rect,
-            byRoundingCorners: corners,
-            cornerRadii: CGSize(width: radius, height: radius)
-        )
-        return Path(path.cgPath)
+        
+        // After a short delay, navigate back to JourneyListView
+        DispatchQueue.main.asyncAfter(deadline: .now()) {
+            shouldNavigateToJourneyList = true
+        }
     }
 }
