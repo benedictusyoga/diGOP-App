@@ -21,62 +21,6 @@ struct CheckpointProgressDot: View {
         }
     }
 }
-struct CheckpointCard: View {
-    let checkpoint: Checkpoint
-    let xpReward: Int
-    let isActive: Bool
-    
-    var body: some View {
-        VStack(spacing: 0) {
-            // Graphic Area
-            Image(checkpoint.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(height: 300)
-                .clipped()
-                .cornerRadius(12, corners: [.topLeft, .topRight])
-            
-            // Details Area
-            VStack(alignment: .leading, spacing: 16) {
-                // Name
-                HStack {
-                    Text("Name")
-                        .foregroundColor(.black)
-                    Spacer()
-                    Text(checkpoint.title)
-                        .foregroundColor(.black)
-                }
-                
-                // XP
-                HStack {
-                    Text("XP")
-                        .foregroundColor(.black)
-                    Spacer()
-                    Text("+\(xpReward) XP")
-                        .foregroundColor(.black)
-                }
-                
-                Divider()
-                
-                // Hint
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Hint")
-                        .foregroundColor(.black)
-                    Text(checkpoint.desc)
-                        .fixedSize(horizontal: false, vertical: true)
-                        .foregroundColor(.black)
-                }
-            }
-            .padding()
-            .background(Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea())
-        }
-        .background(Color(red: 0.95, green: 0.95, blue: 0.97).ignoresSafeArea())
-        .cornerRadius(12)
-        .shadow(radius: isActive ? 5 : 2)
-        .scaleEffect(isActive ? 1.0 : 0.95)
-        .opacity(isActive ? 1.0 : 0.6)
-    }
-}
 
 // Helper extension for rounded corners
 extension View {
@@ -292,6 +236,32 @@ struct JourneyCompleteView: View {
     }
 }
 
+// XP Notification View
+struct XPNotificationView: View {
+    let xpAmount: Int
+    @Binding var isVisible: Bool
+    
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "star.fill")
+                .foregroundColor(.yellow)
+            Text("+\(xpAmount) XP")
+                .font(.headline)
+                .foregroundColor(.white)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(
+            Capsule()
+                .fill(Color.blue)
+                .shadow(color: .black.opacity(0.2), radius: 4, y: 2)
+        )
+        .opacity(isVisible ? 1 : 0)
+        .offset(y: isVisible ? 0 : 50)
+        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isVisible)
+    }
+}
+
 // UICollectionView wrapper for SwiftUI
 struct SnapScrollingCollectionView: UIViewRepresentable {
     let items: [Checkpoint]
@@ -315,7 +285,6 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
         collectionView.register(CheckpointCell.self, forCellWithReuseIdentifier: "CheckpointCell")
         collectionView.register(StartCard.self, forCellWithReuseIdentifier: "StartCard")
         collectionView.register(EndCard.self, forCellWithReuseIdentifier: "EndCard")
-        // collectionView.register(HeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "HeaderView")
         collectionView.isPagingEnabled = false
         collectionView.decelerationRate = .fast
         collectionView.showsVerticalScrollIndicator = false
@@ -326,7 +295,6 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
         let screenHeight = UIScreen.main.bounds.height
         let cardHeight = screenHeight * 0.75
         let topBottomInset = (cardHeight - screenHeight) / 2
-        
         collectionView.contentInset = UIEdgeInsets(
             top: topBottomInset,
             left: 0,
@@ -368,7 +336,7 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-            return CGSize(width: collectionView.bounds.width, height: 100)
+            return CGSize(width: collectionView.bounds.width, height: 150)
         }
         
         func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
@@ -384,20 +352,18 @@ struct SnapScrollingCollectionView: UIViewRepresentable {
         func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
             let screenHeight = UIScreen.main.bounds.height
             let cardHeight = screenHeight * 0.75
-            let spacing = 10.0
-            let fullCardHeight = cardHeight + spacing
             
             let adjustedOffset = targetContentOffset.pointee.y + scrollView.contentInset.top
             let scrollingDown = lastContentOffset < scrollView.contentOffset.y
-            var targetIndex = round(adjustedOffset / fullCardHeight)
+            var targetIndex = round(adjustedOffset / cardHeight)
             
             if abs(velocity.y) > 0.5 {
-                targetIndex = scrollingDown ? ceil(adjustedOffset / fullCardHeight) : floor(adjustedOffset / fullCardHeight)
+                targetIndex = scrollingDown ? ceil(adjustedOffset / cardHeight) : floor(adjustedOffset / cardHeight)
             }
             
             targetIndex = max(0, min(targetIndex, CGFloat(parent.items.count + 1)))
             
-            let finalOffset = (targetIndex * fullCardHeight) - scrollView.contentInset.top
+            let finalOffset = (targetIndex * cardHeight) - scrollView.contentInset.top
             targetContentOffset.pointee = CGPoint(x: 0, y: finalOffset)
             
             // Adjust the currentIndex to account for the start card
@@ -553,7 +519,7 @@ class CheckpointCell: UICollectionViewCell {
     
     func configure(with checkpoint: Checkpoint, xpReward: Int, isActive: Bool) {
         nameValueLabel.text = checkpoint.title
-        xpValueLabel.text = "+\(xpReward) XP"
+        xpValueLabel.text = "+10 XP"
         hintValueLabel.text = checkpoint.desc
         
         if let image = UIImage(named: checkpoint.imageName) {
@@ -583,7 +549,6 @@ class CheckpointCell: UICollectionViewCell {
     }
 }
 
-// Modify JourneyProgressView to add complete button
 struct JourneyProgressView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
@@ -593,47 +558,71 @@ struct JourneyProgressView: View {
     @State private var currentIndex: Int? = 0
     @State private var showingCompleteView = false
     @State private var shouldNavigateToJourneyList = false
+    @State private var showXPNotification = false
     
     var body: some View {
         GeometryReader { geometry in
-            HStack(spacing: 20) {
-                // Vertical Progress Tracker
-                VStack(spacing: 0) {
+            ZStack {
+                HStack(spacing: 20) {
+                    // Vertical Progress Tracker
                     VStack(spacing: 0) {
-                        ForEach(0..<journey.checkpoints.count, id: \.self) { index in
-                            VStack(spacing: 0) {
-                                CheckpointProgressDot(
-                                    isActive: index == (currentIndex ?? 0),
-                                    isCompleted: index < (currentIndex ?? 0)
-                                )
-                                
-                                if index < journey.checkpoints.count - 1 {
-                                    Rectangle()
-                                        .fill(Color.gray.opacity(0.3))
-                                        .frame(width: 2, height: 50)
+                        VStack(spacing: 0) {
+                            ForEach(0..<journey.checkpoints.count, id: \.self) { index in
+                                VStack(spacing: 0) {
+                                    CheckpointProgressDot(
+                                        isActive: index == (currentIndex ?? 0),
+                                        isCompleted: index < (currentIndex ?? 0)
+                                    )
+                                    
+                                    if index < journey.checkpoints.count - 1 {
+                                        Rectangle()
+                                            .fill(Color.gray.opacity(0.3))
+                                            .frame(width: 2, height: 50)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .frame(height: geometry.size.height * 0.5)
+                    
+                    // Main Content
+                    SnapScrollingCollectionView(
+                        items: journey.checkpoints,
+                        xpReward: journey.xpReward,
+                        currentIndex: $currentIndex,
+                        onComplete: completeJourney
+                    )
+                    .onChange(of: currentIndex) { oldValue, newValue in
+                        if let newValue = newValue, let oldValue = oldValue, newValue > oldValue {
+                            journey.completedCheckpoints = max(journey.completedCheckpoints, newValue)
+                            // Award 10 XP for each new checkpoint reached
+                            user.gainXP(10)
+                            
+                            // Show XP notification
+                            withAnimation {
+                                showXPNotification = true
+                            }
+                            
+                            // Hide notification after delay
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation {
+                                    showXPNotification = false
                                 }
                             }
                         }
                     }
                 }
-                .frame(height: geometry.size.height * 0.5)
+                .padding(.horizontal)
+                .navigationBarTitleDisplayMode(.inline)
+                .background(Color(.systemGray6).ignoresSafeArea())
                 
-                // Main Content
-                SnapScrollingCollectionView(
-                    items: journey.checkpoints,
-                    xpReward: journey.xpReward,
-                    currentIndex: $currentIndex,
-                    onComplete: completeJourney
-                )
-                .onChange(of: currentIndex) { oldValue, newValue in
-                    if let newValue = newValue, let oldValue = oldValue, newValue > oldValue {
-                        journey.completedCheckpoints = max(journey.completedCheckpoints, newValue)
-                    }
+                // XP Notification
+                VStack {
+                    Spacer()
+                    XPNotificationView(xpAmount: 10, isVisible: $showXPNotification)
+                        .padding(.bottom, 32)
                 }
             }
-            .padding(.horizontal)
-            .navigationBarTitleDisplayMode(.inline)
-            .background(Color(.systemGray6).ignoresSafeArea())
             .fullScreenCover(isPresented: $showingCompleteView) {
                 JourneyCompleteView(journey: journey, totalXP: journey.checkpoints.count * journey.xpReward)
             }
